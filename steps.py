@@ -42,7 +42,7 @@ post1_comment2.dislike()
 Author.update_rating('Petrov')
 Author.update_rating('Ivanov')
 
-Author.objects.all().order_by('-rating').values('user__username', 'rating')[:1]
+print(Author.objects.all().order_by('-rating')[0])
 
 rated_post = Post.objects.all().order_by('-rating')[0]
 print(rated_post)

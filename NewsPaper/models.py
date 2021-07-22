@@ -21,7 +21,7 @@ class Author(models.Model):
     rating = models.IntegerField(default=0, verbose_name='Рейтинг')
 
     def __str__(self):
-        str = f'{self.user.username}'
+        str = f'{self.user.username} / rating: {self.rating}'
         return str
 
     @staticmethod
