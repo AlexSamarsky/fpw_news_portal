@@ -1,0 +1,17 @@
+{% extends 'default.html' %} 
+
+{% load censor %}
+
+{% block title %}
+News
+{% endblock title %}
+ 
+{% block content %}
+<h1>Все новости</h1>
+{% for new in  news %}
+    <h2>{{ new.title }}</h2>
+    <h3>{{ new.updated|date:'d M Y H:M' }}</h3>
+    <p>{{ new.text|truncatechars:50|censor }}</p>
+{% endfor %}
+
+{% endblock content %}
