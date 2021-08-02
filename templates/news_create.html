@@ -1,0 +1,20 @@
+{% extends 'default.html' %} 
+{% load bootstrap_tags %}
+
+
+{% block title %} Создать новость {% endblock title %}
+ 
+{% block content %}
+<h3>Информация о новости</h3>
+<form method="POST">
+    {% csrf_token %} 
+    {{ form|as_bootstrap }}
+    
+    {% if object.id %}
+        <input type="submit" value="Редактировать новость" class="btn btn-primary">
+    {% else %}
+        <input type="submit" value="Добавить новость" class="btn btn-primary">
+    {% endif %}
+        
+</form>
+{% endblock content %}

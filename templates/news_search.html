@@ -1,0 +1,39 @@
+{% extends 'news.html' %} 
+
+{% load censor %}
+{% load my_tags %}
+{% load bootstrap_tags %}
+
+{% block title %}
+Поиск новостей
+{% endblock title %}
+ 
+{% block footer %}
+<div align="center">
+    <div class="row col-md-6">
+        <form method="GET" class='card p-1'>
+            <div>
+                {% for field in filter.form %}
+                <div>
+                    {{ field.label_tag }} {{ field }}
+                </div>
+                {% endfor %}
+                
+            <!-- {{ filter.form.as_p }} -->
+            </div>
+            <div>
+                    <input type="submit" value="Найти" class='btn btn-primary'>
+            </div>
+        </form>
+    </div>
+<div class="col-md-12">
+    <p>
+        Сортировка:
+        <a href="?{% param_replace ordering='updated' %}" class="btn btn-primary">По дате</a>
+        <a href="?{% param_replace ordering='-updated' %}" class="btn btn-secondary">По дате (убыв)</a>
+        <a href="?{% param_replace ordering='author__user__username' %}" class="btn btn-primary">По автору</a>
+        <a href="?{% param_replace ordering='-author__user__username' %}" class="btn btn-secondary">По автору (убыв)</a>
+    </p>
+</div>
+</div>
+{% endblock footer %}

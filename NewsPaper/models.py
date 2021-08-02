@@ -1,7 +1,8 @@
 from django.db import models
 from django.db.models import Sum
 from django.contrib.auth.models import User
-
+from django.core.paginator import Paginator
+from django.shortcuts import render
 
 class Category(models.Model):
     ''' Категории
@@ -59,7 +60,7 @@ class Post(models.Model):
     text = models.TextField(verbose_name='Текст', null=True)
     rating = models.IntegerField(default=0, verbose_name='Рейтинг')
     
-    categories = models.ManyToManyField(Category, through='PostCategory')
+    categories = models.ManyToManyField(Category, through='PostCategory', verbose_name='Категория')
     
     def __str__(self):
         str = f'{self.updated:%Y-%m-%d %H:%M} - author: {self.author.user.username} / title: {self.title} // {self.preview()}'
@@ -79,6 +80,8 @@ class Post(models.Model):
         else:
             return f'{self.text[:124]}...'
 
+    def get_absolute_url(self):
+        return f'/news/{self.id}'
 
 class Comment(models.Model):
     ''' Комментарии к статьям

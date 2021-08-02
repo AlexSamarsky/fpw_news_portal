@@ -39,6 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'NewsPaper',
     'django_extensions',
+    'django_filters',
+    'rest_framework',
+    'django_forms_bootstrap',
 ]
 
 MIDDLEWARE = [

@@ -3,12 +3,17 @@
 {% load censor %}
 
 {% block title %}
-News
+Редактировать новость
 {% endblock title %}
  
 {% block content %}
 <h1>{{ new.title }}</h1>
 <h2>{{ new.updated|date:'d M Y H:m' }}</h2>
 <p>{{ new.text|censor }}</p>
+
+<form method="POST">
+    {% csrf_token %}
+    <input type="submit" value="подтвердить" class='btn btn-primary'>
+</form>
 
 {% endblock content %}

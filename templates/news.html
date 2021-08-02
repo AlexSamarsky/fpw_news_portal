@@ -6,12 +6,27 @@
 News
 {% endblock title %}
  
+{% block footer %}
+<a href="{% url 'news_search' %}" class="btn btn-primary">Поиск</a>
+{% endblock footer %}
+
+
 {% block content %}
+
 <h1>Все новости</h1>
-{% for new in  news %}
-    <h2>{{ new.title }}</h2>
+{% for new in object_list %}
+    <h2><a href="{% url 'news_detail' new.id %}">{{ new.title }}</a></h2>
     <h3>{{ new.updated|date:'d M Y H:M' }}</h3>
     <p>{{ new.text|truncatechars:50|censor }}</p>
+    <p align='right'>
+        <a href="{% url 'news_update' new.id %}" class="btn btn-success">Редактировать</a>
+        <a href="{% url 'news_delete' new.id %}" class="btn btn-danger">Удалить</a>
+    </p>
 {% endfor %}
+<p align='right'>
+    <a href="{% url 'news_create' %}" class="btn btn-info">Добавить новость</a>
+</p>
+
+{% include 'paginator.html' %}
 
 {% endblock content %}

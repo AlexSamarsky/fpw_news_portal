@@ -1,0 +1,16 @@
+{% extends 'default.html' %} 
+
+{% load censor %}
+
+{% block title %}
+Новость
+{% endblock title %}
+ 
+{% block content %}
+<h1>{{ new.title }}</h1>
+<h2>{{ new.updated|date:'d M Y H:m' }}</h2>
+<p>{{ new.text|censor }}</p>
+
+<a href="{% url 'news_list' %}" class="btn btn-primary">Назад</a>
+
+{% endblock content %}
