@@ -3,6 +3,8 @@ from .forms import PostForm
 from .filters import PostFilter
 from django.views.generic import ListView, DetailView, CreateView
 from .models import Post
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.views import LoginView
 
 
 class FilteredListView(ListView):
@@ -57,7 +59,7 @@ class PostCreateView(CreateView):
     form_class = PostForm
 
 
-class PostUpdateView(UpdateView):
+class PostUpdateView(LoginRequiredMixin, UpdateView):
     template_name = 'news_create.html'
     form_class = PostForm
     
@@ -71,3 +73,6 @@ class PostDeleteView(DeleteView):
     queryset = Post.objects.all()
     success_url = '/news/'
     context_object_name = 'new'
+
+class PortalLoginView(LoginView):
+    template_name = 'login.html'
