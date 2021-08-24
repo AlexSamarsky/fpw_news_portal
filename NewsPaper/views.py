@@ -1,10 +1,11 @@
+from typing import Any, Dict
 from django.http.response import HttpResponseRedirect, HttpResponseForbidden
 from django.views.generic.edit import DeleteView, UpdateView
 from django.views.generic import ListView, DetailView, CreateView
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.urls import reverse
 
-from .forms import PostForm
+from .forms import PostForm, PostFormCreate
 from .filters import PostFilter
 from .models import Post
 
@@ -39,7 +40,9 @@ class PostListView(FilteredListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['is_author'] = self.request.user.groups.filter(name = 'authors').exists()
+        author_exists = self.request.user.groups.filter(name = 'authors').exists()
+        context['is_not_author'] = not author_exists
+        context['is_author'] = author_exists
         return context
     # http_method_names = ['GET', 'POST']
     
@@ -60,11 +63,34 @@ class PostDetailView(DetailView):
     template_name = 'news_detail.html'
     queryset = Post.objects.all()
     context_object_name = 'new'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
 
-class PostCreateView(CreateView):
-    permission_required = ('NewsPaper.add_post')
+        id = self.kwargs.get('pk')
+        post = Post.objects.get(pk=id)
+        can_edit = False
+        if self.request.user.is_superuser:
+            can_edit = True
+        elif self.request.user == post.author.user:
+            can_edit = True
+
+        context['can_edit'] = can_edit
+        return context
+
+class PostCreateView(PermissionRequiredMixin, CreateView):
     template_name = 'news_create.html'
-    form_class = PostForm
+    form_class = PostFormCreate
+    permission_required = ('NewsPaper.add_post')
+
+    def get_initial(self) -> Dict[str, Any]:
+        initial = super().get_initial()
+        initial.update({ 'created_by': self.request.user })
+        return initial
+
+    def __init__(self) -> None:
+        super().__init__()
+        pass
 
 
 class PostUpdateView(PermissionRequiredMixin, UpdateView):

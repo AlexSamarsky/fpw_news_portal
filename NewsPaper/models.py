@@ -83,6 +83,7 @@ class Post(models.Model):
     def get_absolute_url(self):
         return f'/news/{self.id}'
 
+
 class Comment(models.Model):
     ''' Комментарии к статьям
     '''

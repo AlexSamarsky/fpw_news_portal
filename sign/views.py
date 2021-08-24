@@ -1,3 +1,4 @@
+from NewsPaper.models import Author
 from django.shortcuts import redirect, render
 from django.contrib.auth.models import Group
 from django.contrib.auth.decorators import login_required
@@ -10,6 +11,10 @@ from django.contrib.auth import get_user_model
 @login_required
 def be_author(request):
     user = request.user
+    if not Author.objects.filter(user=user).exists():
+        author = Author(user=user)
+        author.save()
+
     author_group = Group.objects.get(name='authors')
     if not user.groups.filter(pk=author_group.pk).exists():
         author_group.user_set.add(user)
