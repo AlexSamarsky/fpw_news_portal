@@ -4,6 +4,14 @@ from django.contrib.auth.models import User
 from django.core.paginator import Paginator
 from django.shortcuts import render
 
+news = 'NW'
+article = 'ART'
+
+PostTypes = [
+    (news, 'news'),
+    (article, 'article'),
+]
+
 class Category(models.Model):
     ''' Категории
     '''
@@ -41,14 +49,6 @@ class Author(models.Model):
         author.rating = post_rating['total'] * 3 + user_rating['total'] + post_comments_rating['total']
         author.save()
 
-
-news = 'NW'
-article = 'ART'
-
-PostTypes = [
-    (news, 'news'),
-    (article, 'article'),
-]
 
 class Post(models.Model):
     ''' Статья/Новость

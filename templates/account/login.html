@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% load account socialaccount %}
+{% load bootstrap_tags %}
+
+
+{% block content %}
+{% get_providers as socialaccount_providers %}
+
+<h1 class="text-center">Log In</h1>
+<hr>
+
+<div class="row">
+
+  {% if socialaccount_providers  %}
+  <div class="col-md-5 col-lg-5">
+    {% include "./provider_panel.html" with process="login" %}
+  </div>
+  {% endif %}
+
+  <div class="{% if socialaccount_providers %}col-md-7 col-lg-7 {% else %} col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3 {% endif %}">
+    <form class="login" method="POST" action="{% url 'account_login' %}">
+      <span class="pull-right">Not yet a member? <a class="btn btn-success" href="{% url 'account_signup' %}">Sign Up</a></span>
+      {% csrf_token %}
+      {{ form|as_bootstrap }}
+      {% if redirect_field_value %}
+      <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+      {% endif %}
+      <div class="form-actions">
+        <button class="btn btn-primary pull-right" type="submit">Sign In</button>
+        <a class="btn" href="{% url 'account_reset_password' %}">Forgot Password?</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+{% endblock %}

@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     'django_filters',
     'rest_framework',
     'django_forms_bootstrap',
+    # 'allauth_bootstrap',
+    'sign',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
@@ -150,6 +152,8 @@ STATICFILES_DIRS = [
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_URL = '/accounts/login/'
+LOGIN_REDIRECT_URL = '/news/'
+ACCOUNT_LOGOUT_REDIRECT_URL ="/news/"
 
 SITE_ID = 1
 
@@ -158,3 +162,8 @@ ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_EMAIL_VERIFICATION = 'none'
+
+
+ACCOUNT_FORMS = {
+    'signup': 'sign.forms.BasicSignupForm',
+}

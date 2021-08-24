@@ -1,4 +1,4 @@
-{% extends 'default.html' %} 
+{% extends 'base.html' %} 
 
 {% load censor %}
 
@@ -6,9 +6,9 @@
 News
 {% endblock title %}
  
-{% block footer %}
+{% block header %}
 <a href="{% url 'news_search' %}" class="btn btn-primary">Поиск</a>
-{% endblock footer %}
+{% endblock header %}
 
 
 {% block content %}
@@ -23,10 +23,11 @@ News
         <a href="{% url 'news_delete' new.id %}" class="btn btn-danger">Удалить</a>
     </p>
 {% endfor %}
+{% if is_author %}
 <p align='right'>
     <a href="{% url 'news_create' %}" class="btn btn-info">Добавить новость</a>
 </p>
-
+{% endif %}
 {% include 'paginator.html' %}
 
 {% endblock content %}
