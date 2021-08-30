@@ -1,5 +1,5 @@
 {% extends 'base.html' %} 
-
+{% load categories %}
 {% load censor %}
 
 {% block title %}
@@ -7,17 +7,19 @@
 {% endblock title %}
  
 {% block content %}
+<div class="container border col-md-8 mb-3">
 <h1>{{ new.title }}</h1>
 <h2>{{ new.updated|date:'d M Y H:m' }}</h2>
 <p>{{ new.text|censor }}</p>
 
+{% categories new.categories %}
 {% if can_edit %}
     <p align='right'>
         <a href="{% url 'news_update' new.id %}" class="btn btn-success">Редактировать</a>
         <a href="{% url 'news_delete' new.id %}" class="btn btn-danger">Удалить</a>
     </p>
 {% endif %}
-
+</div>
 <a href="{% url 'news_list' %}" class="btn btn-primary">Назад</a>
 
 {% endblock content %}

@@ -1,24 +1,32 @@
 {% extends 'base.html' %} 
 
 {% load censor %}
+{% load categories %}
+{% load my_tags %}
 
 {% block title %}
 News
 {% endblock title %}
  
 {% block header %}
-<a href="{% url 'news_search' %}" class="btn btn-primary">Поиск</a>
 {% endblock header %}
 
 
 {% block content %}
 
 <h1>Все новости</h1>
+<div class="container col-md-8">
 {% for new in object_list %}
+<div class="container border mb-3">
     <h2><a href="{% url 'news_detail' new.id %}">{{ new.title }}</a></h2>
     <h3>{{ new.updated|date:'d M Y H:M' }}</h3>
     <p>{{ new.text|truncatechars:50|censor }}</p>
+
+    {% categories new.categories %}
+    <a href="{% url 'sendmail' %}?{% param_replace %}" class="btn btn-info">SEND</a>
+</div>
 {% endfor %}
+</div>
 {% if is_author %}
 <p align='right'>
     <a href="{% url 'news_create' %}" class="btn btn-info">Добавить новость</a>

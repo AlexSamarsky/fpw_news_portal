@@ -1,0 +1,22 @@
+{% load my_tags %}
+
+<div class="container">
+    <div class="row justify-content-md-center">
+        {% for category in categories %}
+        {% comment %} {{ category|categories }} {% endcomment %}
+            {% comment %} {% include 'category.html' %} {% endcomment %}
+            <div>
+            {% if category.is_subscribed %}
+                <a href="{% url 'unsubscribe' %}?{% param_replace category=category.id %}">
+            {% else %}
+                <a href="{% url 'subscribe' %}?{% param_replace category=category.id %}">
+            {% endif %}
+            {{ category.name }}
+            <span class="fa-stack fa-1x" data-count="8">
+            <i class="fa teal-color fa-bell fa-1x {% if not category.is_subscribed %}fa-bell-o{% endif %}"></i>
+            </span>
+            </a>
+            </div>
+        {% endfor %}
+    </div>
+</div>

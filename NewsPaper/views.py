@@ -1,13 +1,16 @@
 from typing import Any, Dict
+from django.contrib.auth.decorators import login_required
 from django.http.response import HttpResponseRedirect, HttpResponseForbidden
 from django.views.generic.edit import DeleteView, UpdateView
 from django.views.generic import ListView, DetailView, CreateView
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.urls import reverse
+from django.conf import settings
+from django.core.mail import send_mail
 
 from .forms import PostForm, PostFormCreate
 from .filters import PostFilter
-from .models import Post
+from .models import Category, CategorySubscribers, Post
 
 
 class FilteredListView(ListView):
@@ -31,7 +34,7 @@ class PostListView(FilteredListView):
     template_name = 'news.html'
     context_object_name = 'news'
     recordset = Post.objects.order_by('-id').all()
-    paginate_by = 1
+    paginate_by = 2
     # ordering = ['id', 'author__user__username']
     form_class = PostForm
 
@@ -131,3 +134,35 @@ class PostDeleteView(PermissionRequiredMixin, DeleteView):
             return post
         else:
             return Post.objects.get(pk=0)
+
+@login_required
+def subscribe(request):
+    try:
+        category_id = int(request.GET['category'])
+        category = Category.objects.get(id=category_id)
+        if not CategorySubscribers.objects.filter(user = request.user, category = category).exists():
+            category_subscriber = CategorySubscribers(user = request.user, category = category)
+            category_subscriber.save()
+    except:
+        pass
+    finally:
+        return HttpResponseRedirect(f'/news/?{request.META["QUERY_STRING"]}')
+
+
+@login_required
+def unsubscribe(request):
+    try:
+        category_id = int(request.GET['category'])
+        category = Category.objects.get(id=category_id)
+        if CategorySubscribers.objects.filter(user = request.user, category = category).exists():
+            category_subscriber = CategorySubscribers.objects.get(user = request.user, category = category)
+            category_subscriber.delete()
+    except:
+        pass
+    finally:
+        return HttpResponseRedirect(f'/news/?{request.META["QUERY_STRING"]}')
+
+
+def sendmail(request):
+    check = send_mail('Тема', 'Тело письма', settings.EMAIL_HOST_USER, ['xsami@yandex.ru'])
+    return HttpResponseRedirect(f'/news/?{request.META["QUERY_STRING"]}')

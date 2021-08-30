@@ -1,12 +1,14 @@
 from django.contrib import admin
 from django.db import models
 from django.http.request import HttpRequest
-from .models import Author, Post, Category
+from .models import Author, CategorySubscribers, Post, Category
 # Register your models here.
 
 admin.site.register(Post)
 admin.site.register(Category)
 admin.site.register(Author)
+admin.site.register(CategorySubscribers)
+
 
 class PostAdmin(admin.ModelAdmin):
 

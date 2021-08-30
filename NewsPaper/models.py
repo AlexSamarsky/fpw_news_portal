@@ -110,3 +110,8 @@ class PostCategory(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, verbose_name='Сообщение')
     category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name='Категория')
 
+
+class CategorySubscribers(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Пользователь')
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name='Категория')
+
