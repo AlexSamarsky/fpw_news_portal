@@ -1,4 +1,5 @@
-from NewsPaper.models import Author
+from django.conf import settings
+from django.core.mail import send_mail
 from django.shortcuts import redirect, render
 from django.contrib.auth.models import Group
 from django.contrib.auth.decorators import login_required
@@ -6,6 +7,32 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.contrib import auth
 from django.contrib.auth import get_user_model
+
+
+
+from allauth.account.signals import user_signed_up
+from django.dispatch import receiver
+from django.template.loader import render_to_string
+
+from NewsPaper.utils import get_external_url
+
+from NewsPaper.models import Author
+
+
+@receiver(user_signed_up, dispatch_uid="some.unique.string.id.for.allauth.user_signed_up_views")
+def user_signed_up_(request, user, **kwargs):
+    external_url = get_external_url(request, '/news/')
+
+    message_text = render_to_string('mail/hello.html', { 'post_url': external_url, })
+    
+    recipients = [user.email]
+    if recipients:
+        send_mail('Добро пожаловать на портал',
+                            message_text,
+                            settings.EMAIL_HOST_USER,
+                            recipients,
+                            html_message=message_text
+                        )
 
 
 @login_required

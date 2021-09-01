@@ -1,0 +1,7 @@
+{% load censor %}
+
+<div class="container border col-md-12 mb-3">
+<h3>{{ new.title }}</h3>
+<p>{{ new.text|truncatechars:100|censor }}</p>
+<a href={{ post_url }} class="btn btn-primary">Перейти</a>
+</div>

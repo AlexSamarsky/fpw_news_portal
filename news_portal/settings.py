@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
+    'django_crontab',
     'NewsPaper',
     'django_extensions',
     'django_filters',
@@ -122,6 +123,10 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+CRONJOBS = [
+    # ('*/1 * * * *', 'NewsPaper.cron.new_posts', '>> ' + os.path.join(BASE_DIR,'log/debug_cron.log' + ' 2>&1 ')),
+    ('0 0 * * MON', 'NewsPaper.cron.new_posts', '>> ' + os.path.join(BASE_DIR,'log/debug_cron.log' + ' 2>&1 ')),
+]
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/

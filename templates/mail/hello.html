@@ -1,0 +1,9 @@
+{% extends 'mail/base.html' %} 
+
+{% block content %}
+<div class="container border col-md-8 mb-3">
+<h1>Добрый день {{ user }}</h1>
+<p>Добро пожаловать на наш новостной портал</p>
+<a href={{ post_url }} class="btn btn-primary">Открыть портал</a>
+</div>
+{% endblock content %}

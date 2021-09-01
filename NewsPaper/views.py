@@ -1,6 +1,7 @@
 from typing import Any, Dict
 from django.contrib.auth.decorators import login_required
-from django.http.response import HttpResponseRedirect, HttpResponseForbidden
+from django.http.request import HttpRequest
+from django.http.response import HttpResponse, HttpResponseRedirect, HttpResponseForbidden
 from django.views.generic.edit import DeleteView, UpdateView
 from django.views.generic import ListView, DetailView, CreateView
 from django.contrib.auth.mixins import PermissionRequiredMixin
@@ -8,6 +9,9 @@ from django.urls import reverse
 from django.conf import settings
 from django.core.mail import send_mail
 
+from django.template.loader import render_to_string
+
+from .utils import get_external_url
 from .forms import PostForm, PostFormCreate
 from .filters import PostFilter
 from .models import Category, CategorySubscribers, Post
@@ -95,6 +99,31 @@ class PostCreateView(PermissionRequiredMixin, CreateView):
         super().__init__()
         pass
 
+    def form_valid(self, form) -> HttpResponse:
+        form_redirect = super().form_valid(form)
+        if form.is_valid():
+            
+
+            external_url = get_external_url(self.request, form_redirect.url)
+
+            message_text = render_to_string('mail/new_post.html', { 'new': form.cleaned_data, 'post_url': external_url, })
+            
+            recipients = list(
+                                CategorySubscribers.objects\
+                                    .filter(category__in=form.cleaned_data['categories'])\
+                                    .exclude(user=self.request.user)\
+                                    .values_list('user__email', flat=True)
+                            )
+            if recipients:
+                send_mail('Новый пост',
+                                    message_text,
+                                    settings.EMAIL_HOST_USER,
+                                    recipients,
+                                    html_message=message_text
+                                )
+                
+        return form_redirect
+    
 
 class PostUpdateView(PermissionRequiredMixin, UpdateView):
     permission_required = ('NewsPaper.change_post')

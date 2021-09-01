@@ -1,0 +1,9 @@
+{% extends 'mail/base.html' %} 
+{% block content %}
+<div class="container col-md-6">
+<h1>Новые посты за прошлую неделю</h1>
+    {% for new in news %}
+        {% include 'mail/post.html' with new=new post_url=new.post_url %}
+    {% endfor %}
+</div>
+{% endblock content %}

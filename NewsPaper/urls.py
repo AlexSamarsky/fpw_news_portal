@@ -1,5 +1,6 @@
 from django.urls import path
 from .views import PostCreateView, PostDeleteView, PostListView, PostDetailView, PostUpdateView, PostSearchListView, sendmail, subscribe, unsubscribe
+from .cron import new_posts
 
 urlpatterns = [
     path('', PostListView.as_view(), name='news_list'),
@@ -10,5 +11,6 @@ urlpatterns = [
     path('<int:pk>/delete/', PostDeleteView.as_view(), name='news_delete'),
     path('subscribe/', subscribe, name='subscribe'),
     path('unsubscribe/', unsubscribe, name='unsubscribe'),
-    path('sendmail/', sendmail, name='sendmail')
+    path('sendmail/', sendmail, name='sendmail'),
+    path('new_posts/', new_posts, name='new_posts'),
 ]
