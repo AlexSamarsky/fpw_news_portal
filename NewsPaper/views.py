@@ -18,6 +18,8 @@ from .models import Category, CategorySubscribers, Post
 
 from .tasks import send_email_message
 
+import logging
+
 class FilteredListView(ListView):
     filterset_class = None
     form_class = None
@@ -73,6 +75,9 @@ class PostDetailView(DetailView):
     context_object_name = 'new'
     
     def get_context_data(self, **kwargs):
+
+        logger.error('test')
+
         context = super().get_context_data(**kwargs)
 
         id = self.kwargs.get('pk')

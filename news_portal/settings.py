@@ -125,7 +125,8 @@ AUTH_PASSWORD_VALIDATORS = [
 
 CRONJOBS = [
     # ('*/1 * * * *', 'NewsPaper.cron.new_posts', '>> ' + os.path.join(BASE_DIR,'log/debug_cron.log' + ' 2>&1 ')),
-    ('0 0 * * MON', 'NewsPaper.cron.new_posts', '>> ' + os.path.join(BASE_DIR,'log/debug_cron.log' + ' 2>&1 ')),
+    ('0 0 * * MON', 'NewsPaper.cron.new_posts', '>> ' + \
+     os.path.join(BASE_DIR, 'log/debug_cron.log' + ' 2>&1 ')),
 ]
 
 # Internationalization
@@ -158,7 +159,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/news/'
-ACCOUNT_LOGOUT_REDIRECT_URL ="/news/"
+ACCOUNT_LOGOUT_REDIRECT_URL = "/news/"
 
 SITE_ID = 1
 
@@ -188,4 +189,114 @@ CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 
-CELERY_TASK_ALWAYS_EAGER  = True
+CELERY_TASK_ALWAYS_EAGER = True
+
+# EMAIL_BACKEND = 'xsami@yandex.ru'
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'simple': {
+            'format': '{asctime} {levelname} {message}',
+            'style': '{'
+        },
+        'middle': {
+            'format': '{asctime} {levelname} {message} {pathname}',
+            'style': '{'
+        },
+        'general_log': {
+            'format': '{asctime} {levelname} {module} {message}',
+            'style': '{'
+        },
+        'error_log': {
+            'format': '{asctime} {levelname} {pathname} {message} {exc_info}',
+            'style': '{'
+        },
+        'mail_log': {
+            'format': '{asctime} {levelname} {pathname} {message}',
+            'style': '{'
+        },
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message} {exc_info}',
+            'style': '{'
+        }
+    },
+    'filters': {
+        'require_debug_true': {
+            '()': 'django.utils.log.RequireDebugTrue',
+        },
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse',
+        },
+    },
+    'handlers': {
+        'console_debug': {
+            'level': 'DEBUG',
+            'filters': ['require_debug_true'],
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple'
+        },
+        'console_warning': {
+            'level': 'WARNING',
+            'filters': ['require_debug_true'],
+            'class': 'logging.StreamHandler',
+            'formatter': 'middle'
+        },
+        'console_error': {
+            'level': 'ERROR',
+            'filters': ['require_debug_true'],
+            'class': 'logging.StreamHandler',
+            'formatter': 'error_log'
+        },
+        'mail_admins': {
+            'level': 'ERROR',
+            'class': 'django.utils.log.AdminEmailHandler'
+        },
+        'general_file': {
+            'level': 'INFO',
+            'filters': ['require_debug_false'],
+            'class': 'logging.FileHandler',
+            'filename': 'log/general.log',
+            'formatter': 'general_log'
+        },
+        'error_file': {
+            'level': 'ERROR',
+            'class': 'logging.FileHandler',
+            'filename': 'log/error.log',
+            'formatter': 'error_log'
+        },
+        'security_file': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': 'log/security.log',
+            'formatter': 'general_log'
+        },
+        'mail': {
+            'level': 'ERROR',
+            'class': 'django.utils.log.AdminEmailHandler',
+            'include_html': True,
+            'formatter': 'mail_log'
+        }
+    },
+    'loggers':{
+        'django':{
+            'handlers': ['general_file', 'console_debug', 'console_warning', 'console_error']
+        },
+        'django.request':{
+            'handlers': ['error_file', 'mail']
+        },
+        'django.server':{
+            'handlers': ['error_file', 'mail']
+        },
+        'django.template':{
+            'handlers': ['error_file']
+        },
+        'django.db_backends':{
+            'handlers': ['error_file']
+        },
+        'django.security':{
+            'handlers': ['error_file']
+        }
+    }
+}
